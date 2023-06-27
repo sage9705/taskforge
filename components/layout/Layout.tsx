@@ -9,8 +9,8 @@ import Link from 'next/link';
 import Hero from '../Hero';
 import Benefits from '../Benefits';
 import Features from '../Features';
-import { motion, AnimatePresence } from 'framer-motion';
 import ScrollToTop from '../ScrollToTop';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type LayoutProps = {
     children: ReactNode;
@@ -42,23 +42,23 @@ const Layout = ({ children, title = 'TaskForge' }: LayoutProps) => {
     }, []);
 
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100">
+        <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
             <Head>
                 <title>{title}</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <header className={`fixed w-full z-10 transition-all duration-300 ${scrollY > 20 ? 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
+            <header className={`fixed w-full z-10 transition-all duration-300 ${scrollY > 20 ? 'bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
                 <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <Link href="/" className="text-3xl font-bold text-primary-600 dark:text-primary-400 transition-colors duration-300 hover:text-primary-700 dark:hover:text-primary-300">
                         TaskForge
                     </Link>
                     <div className="hidden md:flex items-center space-x-6">
                         {isAuthenticated && (
-                            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors duration-300">
+                            <Link href="/dashboard" className="text-text-light dark:text-text-dark hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300">
                                 Dashboard
                             </Link>
                         )}
-                        <Link href="/settings" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors duration-300">
+                        <Link href="/settings" className="text-text-light dark:text-text-dark hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300">
                             Settings
                         </Link>
                         <ThemeSwitcher />
@@ -76,7 +76,7 @@ const Layout = ({ children, title = 'TaskForge' }: LayoutProps) => {
                         )}
                     </div>
                     <button 
-                        className="md:hidden text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                        className="md:hidden text-text-light dark:text-text-dark hover:text-primary-600 dark:hover:text-primary-400"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -90,15 +90,15 @@ const Layout = ({ children, title = 'TaskForge' }: LayoutProps) => {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="md:hidden bg-white dark:bg-gray-800 shadow-lg"
+                            className="md:hidden bg-background-light dark:bg-background-dark shadow-lg"
                         >
                             <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
                                 {isAuthenticated && (
-                                    <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                                    <Link href="/dashboard" className="text-text-light dark:text-text-dark hover:text-primary-600 dark:hover:text-primary-400">
                                         Dashboard
                                     </Link>
                                 )}
-                                <Link href="/settings" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                                <Link href="/settings" className="text-text-light dark:text-text-dark hover:text-primary-600 dark:hover:text-primary-400">
                                     Settings
                                 </Link>
                                 {isAuthenticated ? (
@@ -131,12 +131,12 @@ const Layout = ({ children, title = 'TaskForge' }: LayoutProps) => {
                     </div>
                 )}
             </main>
-            <ScrollToTop />
-            <footer className="bg-gray-100 dark:bg-gray-800 mt-auto">
-                <div className="container mx-auto px-4 py-6 text-center text-gray-600 dark:text-gray-300">
+            <footer className="bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-700">
+                <div className="container mx-auto px-4 py-6 text-center text-text-light dark:text-text-dark">
                     <p>&copy; 2024 TaskForge. All rights reserved.</p>
                 </div>
             </footer>
+            <ScrollToTop />
         </div>
     );
 };
