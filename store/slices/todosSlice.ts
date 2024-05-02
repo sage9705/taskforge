@@ -8,10 +8,12 @@ interface Todo {
 
 interface TodosState {
   items: Todo[];
+  filter: 'all' | 'active' | 'completed';
 }
 
 const initialState: TodosState = {
   items: [],
+  filter: 'all',
 };
 
 const todosSlice = createSlice({
@@ -34,8 +36,11 @@ const todosSlice = createSlice({
     removeTodo: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter(item => item.id !== action.payload);
     },
+    setFilter: (state, action: PayloadAction<'all' | 'active' | 'completed'>) => {
+      state.filter = action.payload;
+    },
   },
 });
 
-export const { addTodo, toggleTodo, removeTodo } = todosSlice.actions;
+export const { addTodo, toggleTodo, removeTodo, setFilter } = todosSlice.actions;
 export default todosSlice.reducer;
