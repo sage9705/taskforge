@@ -6,9 +6,10 @@ interface TodoItemProps {
   id: string;
   text: string;
   completed: boolean;
+  category: string;
 }
 
-const TodoItem = ({ id, text, completed }: TodoItemProps) => {
+const TodoItem = ({ id, text, completed, category }: TodoItemProps) => {
   const dispatch = useDispatch();
 
   return (
@@ -27,6 +28,7 @@ const TodoItem = ({ id, text, completed }: TodoItemProps) => {
           className="mr-2"
         />
         <span className={completed ? 'line-through text-gray-500' : ''}>{text}</span>
+        <span className="ml-2 text-sm text-gray-500">({category})</span>
       </div>
       <button
         onClick={() => dispatch(removeTodo(id))}
