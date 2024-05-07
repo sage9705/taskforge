@@ -6,6 +6,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -19,8 +20,14 @@ const config: Config = {
           DEFAULT: '#F6AD55',
           dark: '#ED8936',
         },
-        background: '#F7FAFC',
-        text: '#2D3748',
+        background: {
+          light: '#F7FAFC',
+          dark: '#2D3748',
+        },
+        text: {
+          light: '#2D3748',
+          dark: '#F7FAFC',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

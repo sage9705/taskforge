@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { logout } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
+import ThemeSwitcher from '../ui/ThemeSwitcher';
 
 type LayoutProps = {
   children: ReactNode;
@@ -21,7 +22,7 @@ const Layout = ({ children, title = 'Todo List App' }: LayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
       <Head>
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
@@ -29,20 +30,23 @@ const Layout = ({ children, title = 'Todo List App' }: LayoutProps) => {
       <header className="bg-primary text-white shadow-md">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <h1 className="text-3xl font-bold">TaskForge</h1>
-          {isAuthenticated && (
-            <button
-              onClick={handleLogout}
-              className="bg-secondary hover:bg-secondary-dark text-white font-bold py-2 px-4 rounded transition duration-300"
-            >
-              Logout
-            </button>
-          )}
+          <div className="flex items-center space-x-4">
+            <ThemeSwitcher />
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className="bg-secondary hover:bg-secondary-dark text-white font-bold py-2 px-4 rounded transition duration-300"
+              >
+                Logout
+              </button>
+            )}
+          </div>
         </div>
       </header>
       <main className="container mx-auto px-4 py-8">
         {children}
       </main>
-      <footer className="bg-text text-white mt-auto">
+      <footer className="bg-text-light dark:bg-text-dark text-white mt-auto">
         <div className="container mx-auto px-4 py-6 text-center">
           <p>&copy; 2024 TaskForge. All rights reserved.</p>
         </div>

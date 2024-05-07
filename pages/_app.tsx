@@ -4,16 +4,22 @@ import { Provider } from 'react-redux';
 import { store } from '../store';
 import Layout from '../components/layout/Layout';
 import ErrorMessage from '../components/ui/ErrorMessage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function TaskForge({ Component, pageProps }: AppProps) {
+  const theme = useSelector((state: RootState) => state.ui.theme);
+
   return (
     <Provider store={store}>
-      <Layout>
-        <ErrorMessage />
-        <Component {...pageProps} />
-      </Layout>
+      <div className={theme === 'dark' ? 'dark' : ''}>
+        <Layout>
+          <ErrorMessage />
+          <Component {...pageProps} />
+        </Layout>
+      </div>
     </Provider>
   );
 }
 
-export default MyApp;
+export default TaskForge;
