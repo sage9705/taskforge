@@ -5,6 +5,7 @@ interface Todo {
   text: string;
   completed: boolean;
   category: string;
+  dueDate: string | null;
 }
 
 interface TodosState {
@@ -23,12 +24,13 @@ const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo: (state, action: PayloadAction<{ text: string; category: string }>) => {
+    addTodo: (state, action: PayloadAction<{ text: string; category: string; dueDate: string | null }>) => {
       state.items.push({
         id: Date.now().toString(),
         text: action.payload.text,
         category: action.payload.category,
         completed: false,
+        dueDate: action.payload.dueDate,
       });
     },
     toggleTodo: (state, action: PayloadAction<string>) => {
@@ -48,8 +50,14 @@ const todosSlice = createSlice({
         state.categories.push(action.payload);
       }
     },
+    updateTodoDueDate: (state, action: PayloadAction<{ id: string; dueDate: string | null }>) => {
+      const todo = state.items.find(item => item.id === action.payload.id);
+      if (todo) {
+        todo.dueDate = action.payload.dueDate;
+      }
+    },
   },
 });
 
-export const { addTodo, toggleTodo, removeTodo, setFilter, addCategory } = todosSlice.actions;
+export const { addTodo, toggleTodo, removeTodo, setFilter, addCategory, updateTodoDueDate } = todosSlice.actions;
 export default todosSlice.reducer;

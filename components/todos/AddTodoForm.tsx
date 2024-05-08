@@ -7,14 +7,16 @@ const AddTodoForm = () => {
   const [text, setText] = useState('');
   const [category, setCategory] = useState('Personal');
   const [newCategory, setNewCategory] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.todos.categories);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      dispatch(addTodo({ text: text.trim(), category }));
+      dispatch(addTodo({ text: text.trim(), category, dueDate: dueDate || null }));
       setText('');
+      setDueDate('');
     }
   };
 
@@ -38,7 +40,7 @@ const AddTodoForm = () => {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mr-2"
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -46,6 +48,12 @@ const AddTodoForm = () => {
             </option>
           ))}
         </select>
+        <input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        />
       </div>
       <div className="flex mb-2">
         <input
