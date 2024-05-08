@@ -21,7 +21,7 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className={theme === 'dark' ? 'dark' : ''}>
+    <div className={`${theme === 'dark' ? 'dark' : ''} font-inter`}>
       {children}
     </div>
   );

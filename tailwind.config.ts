@@ -11,18 +11,32 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          light: '#4FD1C5',
-          DEFAULT: '#38B2AC',
-          dark: '#319795',
+          50: '#E6F6FF',
+          100: '#BAE3FF',
+          200: '#7CC4FA',
+          300: '#47A3F3',
+          400: '#2186EB',
+          500: '#0967D2',
+          600: '#0552B5',
+          700: '#03449E',
+          800: '#01337D',
+          900: '#002159',
         },
         secondary: {
-          light: '#FBD38D',
-          DEFAULT: '#F6AD55',
-          dark: '#ED8936',
+          50: '#FFFBEA',
+          100: '#FFF3C4',
+          200: '#FCE588',
+          300: '#FADB5F',
+          400: '#F7C948',
+          500: '#F0B429',
+          600: '#DE911D',
+          700: '#CB6E17',
+          800: '#B44D12',
+          900: '#8D2B0B',
         },
         background: {
-          light: '#F7FAFC',
-          dark: '#2D3748',
+          light: '#F8FAFC',
+          dark: '#1A202C',
         },
         text: {
           light: '#2D3748',
@@ -30,10 +44,13 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        axiforma: ['Axiforma', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
       },
     },
   },
   plugins: [],
 }
+
 export default config;
