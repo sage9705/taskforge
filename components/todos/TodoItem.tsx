@@ -23,7 +23,7 @@ const TodoItem = ({ id, text, completed, category, dueDate }: TodoItemProps) => 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.3 }}
-      className="flex items-center justify-between py-2 border-b"
+      className="flex items-center justify-between py-2 border-b bg-white dark:bg-gray-800 px-4 rounded-md shadow-sm mb-2"
     >
       <div className="flex items-center">
         <input
