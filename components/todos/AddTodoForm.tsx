@@ -4,19 +4,27 @@ import { addTodo, addCategory } from '../../store/slices/todosSlice';
 import { RootState } from '../../store';
 
 const AddTodoForm = () => {
-  const [text, setText] = useState('');
-  const [category, setCategory] = useState('Personal');
-  const [newCategory, setNewCategory] = useState('');
-  const [dueDate, setDueDate] = useState('');
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.todos.categories);
+  
+  const [text, setText] = useState('');
+  const [category, setCategory] = useState('Personal');
+  const [dueDate, setDueDate] = useState('');
+  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [newCategory, setNewCategory] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      dispatch(addTodo({ text: text.trim(), category, dueDate: dueDate || null }));
+      dispatch(addTodo({
+        text: text.trim(),
+        category,
+        dueDate: dueDate || null,
+        priority
+      }));
       setText('');
       setDueDate('');
+      setPriority('medium');
     }
   };
 
@@ -28,7 +36,7 @@ const AddTodoForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
+    <form onSubmit={handleSubmit} className="mb-4 bg-white dark:bg-gray-800 p-4 rounded-md shadow">
       <input
         type="text"
         value={text}
@@ -36,24 +44,31 @@ const AddTodoForm = () => {
         placeholder="Add a new todo"
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-2"
       />
-      <div className="flex mb-2">
+      <div className="flex mb-2 space-x-2">
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mr-2"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
         <input
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
         />
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
       </div>
       <div className="flex mb-2">
         <input
@@ -61,7 +76,7 @@ const AddTodoForm = () => {
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
           placeholder="New category"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mr-2"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mr-2"
         />
         <button
           type="button"

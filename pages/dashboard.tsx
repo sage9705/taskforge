@@ -5,13 +5,14 @@ import AddTodoForm from '../components/todos/AddTodoForm';
 import TodoFilter from '../components/todos/TodoFilter';
 import TodoSort from '../components/todos/TodoSort';
 import TodoSearch from '../components/todos/TodoSearch';
+import ClearCompletedButton from '../components/todos/ClearCompletedButton';
 import Overview from '../components/dashboard/Overview';
 
 const Dashboard = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <div>
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Welcome, {user}!</h1>
       <Overview />
       <AddTodoForm />
@@ -21,6 +22,9 @@ const Dashboard = () => {
         <TodoSort />
       </div>
       <TodoList />
+      <div className="mt-4 flex justify-end">
+        <ClearCompletedButton />
+      </div>
     </div>
   );
 };

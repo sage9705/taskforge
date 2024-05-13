@@ -7,7 +7,7 @@ const TodoSort = () => {
   const sortBy = useSelector((state: RootState) => state.todos.sortBy);
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setSortBy(e.target.value as 'dueDate' | 'category' | 'status'));
+    dispatch(setSortBy(e.target.value as 'dueDate' | 'category' | 'status' | 'priority'));
   };
 
   return (
@@ -22,6 +22,7 @@ const TodoSort = () => {
         <option value="dueDate">Due Date</option>
         <option value="category">Category</option>
         <option value="status">Status</option>
+        <option value="priority">Priority</option>
       </select>
     </div>
   );
