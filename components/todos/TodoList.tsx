@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import TodoItem from './TodoItem';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { useDispatch } from 'react-redux';
+import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from 'react-beautiful-dnd';
 import { reorderTodos } from '../../store/slices/todosSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,6 +13,7 @@ const TodoList: React.FC = () => {
   const sortBy = useSelector((state: RootState) => state.todos.sortBy);
   const searchTerm = useSelector((state: RootState) => state.todos.searchTerm);
   const showCompletedTodos = useSelector((state: RootState) => state.settings.showCompletedTodos);
+
 
   const filteredAndSortedTodos = useMemo(() => {
     let result = todos.filter(todo => {
@@ -75,7 +75,7 @@ const TodoList: React.FC = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="todoList">
-        {(provided) => (
+        {(provided: DroppableProvided) => (
           <ul 
             {...provided.droppableProps} 
             ref={provided.innerRef}
@@ -84,18 +84,21 @@ const TodoList: React.FC = () => {
             <AnimatePresence>
               {filteredAndSortedTodos.map((todo, index) => (
                 <Draggable key={todo.id} draggableId={todo.id} index={index}>
-                  {(provided) => (
-                    <motion.li
+                  {(provided: DraggableProvided) => (
+                    <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2 }}
                     >
-                      <TodoItem {...todo} />
-                    </motion.li>
+                      <motion.li
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <TodoItem {...todo} />
+                      </motion.li>
+                    </div>
                   )}
                 </Draggable>
               ))}
