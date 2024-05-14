@@ -1,10 +1,11 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearError } from '../../store/slices/uiSlice';
+import { RootState } from '../../store';
 
 const ErrorMessage = () => {
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.ui.error);
+  const error = useSelector((state: RootState) => state.ui.error);
 
   if (!error) return null;
 
