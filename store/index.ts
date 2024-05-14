@@ -4,6 +4,7 @@ import authReducer from './slices/authSlice';
 import todosReducer from './slices/todosSlice';
 import uiReducer from './slices/uiSlice';
 import settingsReducer from './slices/settingsSlice';
+import pomodoroReducer from './slices/pomodoroSlice';
 import { loadState, saveState } from '../utils/localStorage';
 
 const preloadedState = loadState();
@@ -14,6 +15,7 @@ export const store = configureStore({
     todos: todosReducer,
     ui: uiReducer,
     settings: settingsReducer,
+    pomodoro: pomodoroReducer,
   },
   preloadedState,
 });

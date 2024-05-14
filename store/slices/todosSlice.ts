@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface Subtask {
+    id: string;
+    text: string;
+    completed: boolean;
+  }
 export interface Todo {
   id: string;
   text: string;
@@ -8,6 +13,7 @@ export interface Todo {
   dueDate: string | null;
   priority: "low" | "medium" | "high";
   tags: string[];
+  subtasks: Subtask[];
 }
 
 interface TodosState {
@@ -140,6 +146,31 @@ const todosSlice = createSlice({
         todo.priority = action.payload.priority;
       }
     },
+    addSubtask: (state, action: PayloadAction<{ todoId: string; subtaskText: string }>) => {
+        const todo = state.items.find(item => item.id === action.payload.todoId);
+        if (todo) {
+          todo.subtasks.push({
+            id: Date.now().toString(),
+            text: action.payload.subtaskText,
+            completed: false,
+          });
+        }
+      },
+      toggleSubtask: (state, action: PayloadAction<{ todoId: string; subtaskId: string }>) => {
+        const todo = state.items.find(item => item.id === action.payload.todoId);
+        if (todo) {
+          const subtask = todo.subtasks.find(st => st.id === action.payload.subtaskId);
+          if (subtask) {
+            subtask.completed = !subtask.completed;
+          }
+        }
+      },
+      removeSubtask: (state, action: PayloadAction<{ todoId: string; subtaskId: string }>) => {
+        const todo = state.items.find(item => item.id === action.payload.todoId);
+        if (todo) {
+          todo.subtasks = todo.subtasks.filter(st => st.id !== action.payload.subtaskId);
+        }
+      },
   },
 });
 
@@ -156,6 +187,9 @@ export const {
   reorderTodos,
   clearCompletedTodos,
   setTodoPriority,
+  addSubtask,
+  toggleSubtask,
+  removeSubtask,
 } = todosSlice.actions;
 
 export default todosSlice.reducer;

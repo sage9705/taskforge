@@ -1,8 +1,8 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleTodo, removeTodo, updateTodo, setTodoPriority, addTodoTag, removeTodoTag } from '../../store/slices/todosSlice';
-import { RootState } from '../../store';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleTodo, removeTodo, updateTodo, setTodoPriority, addTodoTag, removeTodoTag, addSubtask, toggleSubtask, removeSubtask } from '../../store/slices/todosSlice';
 import { motion } from 'framer-motion';
+import { Subtask } from '../../store/slices/todosSlice';
 
 interface TodoItemProps {
   id: string;
@@ -12,11 +12,19 @@ interface TodoItemProps {
   dueDate: string | null;
   priority: 'low' | 'medium' | 'high';
   tags: string[];
+  subtasks: Subtask[];
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueDate, priority, tags }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueDate, priority, tags, subtasks }) => {
   const dispatch = useDispatch();
-  const allTags = useSelector((state: RootState) => state.todos.tags);
+  const [newSubtask, setNewSubtask] = useState('');
+
+  const handleAddSubtask = () => {
+    if (newSubtask.trim()) {
+      dispatch(addSubtask({ todoId: id, subtaskText: newSubtask.trim() }));
+      setNewSubtask('');
+    }
+  };
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateTodo({ id, dueDate: e.target.value || null }));

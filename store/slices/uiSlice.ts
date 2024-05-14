@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UIState {
   darkMode: boolean;
+  theme: 'light' | 'dark';
 }
 
 const initialState: UIState = {
   darkMode: false,
+  theme: 'light',
 };
 
 const uiSlice = createSlice({
@@ -14,6 +16,7 @@ const uiSlice = createSlice({
   reducers: {
     toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
+      state.theme = state.darkMode ? 'dark' : 'light';
     },
   },
 });
