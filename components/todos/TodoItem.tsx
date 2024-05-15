@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { toggleTodo, removeTodo, updateTodo, setTodoPriority, addTodoTag, removeTodoTag, addSubtask, toggleSubtask, removeSubtask } from '../../store/slices/todosSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleTodo, removeTodo, updateTodo, setTodoPriority, addSubtask, toggleSubtask, removeSubtask } from '../../store/slices/todosSlice';
 import { motion } from 'framer-motion';
 import { Subtask } from '../../store/slices/todosSlice';
+import { RootState } from '../../store';
 
 interface TodoItemProps {
   id: string;
@@ -18,6 +19,7 @@ interface TodoItemProps {
 const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueDate, priority, tags, subtasks }) => {
   const dispatch = useDispatch();
   const [newSubtask, setNewSubtask] = useState('');
+  const allTags = useSelector((state: RootState) => state.todos.tags);
 
   const handleAddSubtask = () => {
     if (newSubtask.trim()) {
@@ -37,12 +39,12 @@ const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueD
   const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tag = e.target.value;
     if (tag && !tags.includes(tag)) {
-      dispatch(addTodoTag({ todoId: id, tag }));
+      dispatch(updateTodo({ id, tags: [...tags, tag] }));
     }
   };
 
   const handleRemoveTag = (tag: string) => {
-    dispatch(removeTodoTag({ todoId: id, tag }));
+    dispatch(updateTodo({ id, tags: tags.filter(t => t !== tag) }));
   };
 
   const priorityColors = {
@@ -103,7 +105,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueD
           </span>
         ))}
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center mb-2">
         <select
           onChange={handleTagChange}
           className="px-2 py-1 border border-gray-300 rounded-md text-sm mr-2"
@@ -114,6 +116,43 @@ const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueD
           ))}
         </select>
         <span className="text-sm text-gray-500">{category}</span>
+      </div>
+      <div className="mt-2">
+        <h4 className="font-semibold mb-1">Subtasks:</h4>
+        <ul className="space-y-1">
+          {subtasks.map(subtask => (
+            <li key={subtask.id} className="flex items-center">
+              <input
+                type="checkbox"
+                checked={subtask.completed}
+                onChange={() => dispatch(toggleSubtask({ todoId: id, subtaskId: subtask.id }))}
+                className="mr-2"
+              />
+              <span className={subtask.completed ? 'line-through' : ''}>{subtask.text}</span>
+              <button
+                onClick={() => dispatch(removeSubtask({ todoId: id, subtaskId: subtask.id }))}
+                className="ml-2 text-red-500 hover:text-red-700"
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="flex mt-2">
+          <input
+            type="text"
+            value={newSubtask}
+            onChange={(e) => setNewSubtask(e.target.value)}
+            placeholder="New subtask"
+            className="flex-grow px-2 py-1 border border-gray-300 rounded-md text-sm mr-2"
+          />
+          <button
+            onClick={handleAddSubtask}
+            className="bg-blue-500 text-white px-2 py-1 rounded-md text-sm"
+          >
+            Add
+          </button>
+        </div>
       </div>
     </motion.div>
   );
