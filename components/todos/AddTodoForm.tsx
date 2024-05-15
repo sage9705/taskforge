@@ -20,11 +20,12 @@ const AddTodoForm: React.FC = () => {
     e.preventDefault();
     if (text.trim()) {
       dispatch(addTodo({
-        text: text.trim(),
-        category,
-        dueDate: dueDate || null,
-        priority,
-        tags: selectedTags
+          text: text.trim(),
+          category,
+          dueDate: dueDate || null,
+          priority,
+          tags: selectedTags,
+          subtasks: []
       }));
       setText('');
       setDueDate('');
