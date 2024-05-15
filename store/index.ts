@@ -1,8 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './rootReducer';
+import authReducer from './slices/authSlice';
+import todosReducer from './slices/todosSlice';
+import uiReducer from './slices/uiSlice';
+import settingsReducer from './slices/settingsSlice';
 
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    auth: authReducer,
+    todos: todosReducer,
+    ui: uiReducer,
+    settings: settingsReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
