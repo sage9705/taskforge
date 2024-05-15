@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
-import { addTag, removeTag } from '../../store/slices/todosSlice';
+import { addCategory, removeCategory } from '../../store/slices/todosSlice';
 
 const TagManagement: React.FC = () => {
   const dispatch = useDispatch();
@@ -10,9 +10,13 @@ const TagManagement: React.FC = () => {
 
   const handleAddTag = () => {
     if (newTag.trim()) {
-      dispatch(addTag(newTag.trim()));
+      dispatch(addCategory(newTag.trim()));
       setNewTag('');
     }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    dispatch(removeCategory(tag));
   };
 
   return (
@@ -38,7 +42,7 @@ const TagManagement: React.FC = () => {
           <span key={tag} className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full text-sm flex items-center">
             {tag}
             <button
-              onClick={() => dispatch(removeTag(tag))}
+              onClick={() => handleRemoveTag(tag)}
               className="ml-2 text-red-500 hover:text-red-700"
             >
               ×
