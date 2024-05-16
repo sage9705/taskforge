@@ -1,5 +1,7 @@
-import { useDispatch } from 'react-redux';
-import { toggleTodo, removeTodo, updateTodo, setTodoPriority } from '../../store/slices/todosSlice';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleTodo, removeTodo, updateTodo, setTodoPriority, addTodoTag, removeTodoTag } from '../../store/slices/todosSlice';
+import { RootState } from '../../store';
 import { motion } from 'framer-motion';
 
 interface TodoItemProps {
@@ -9,10 +11,12 @@ interface TodoItemProps {
   category: string;
   dueDate: string | null;
   priority: 'low' | 'medium' | 'high';
+  tags: string[];
 }
 
-const TodoItem = ({ id, text, completed, category, dueDate, priority }: TodoItemProps) => {
+const TodoItem: React.FC<TodoItemProps> = ({ id, text, completed, category, dueDate, priority, tags }) => {
   const dispatch = useDispatch();
+  const allTags = useSelector((state: RootState) => state.todos.tags);
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateTodo({ id, dueDate: e.target.value || null }));
@@ -22,31 +26,46 @@ const TodoItem = ({ id, text, completed, category, dueDate, priority }: TodoItem
     dispatch(setTodoPriority({ id, priority: e.target.value as 'low' | 'medium' | 'high' }));
   };
 
+  const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const tag = e.target.value;
+    if (tag && !tags.includes(tag)) {
+      dispatch(addTodoTag({ todoId: id, tag }));
+    }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    dispatch(removeTodoTag({ todoId: id, tag }));
+  };
+
   const priorityColors = {
-    low: 'bg-green-200',
-    medium: 'bg-yellow-200',
-    high: 'bg-red-200'
+    low: 'bg-green-200 dark:bg-green-800',
+    medium: 'bg-yellow-200 dark:bg-yellow-800',
+    high: 'bg-red-200 dark:bg-red-800'
   };
 
   return (
-    <motion.li
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.3 }}
-      className={`flex items-center justify-between py-2 px-4 rounded-md shadow-sm mb-2 ${priorityColors[priority]}`}
+    <motion.div
+      className={`p-4 rounded-lg shadow-md ${priorityColors[priority]}`}
+      layout
     >
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          checked={completed}
-          onChange={() => dispatch(toggleTodo(id))}
-          className="mr-2"
-        />
-        <span className={completed ? 'line-through text-gray-500' : ''}>{text}</span>
-        <span className="ml-2 text-sm text-gray-500">({category})</span>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={completed}
+            onChange={() => dispatch(toggleTodo(id))}
+            className="mr-2"
+          />
+          <span className={`text-lg ${completed ? 'line-through text-gray-500' : ''}`}>{text}</span>
+        </div>
+        <button
+          onClick={() => dispatch(removeTodo(id))}
+          className="text-red-500 hover:text-red-700"
+        >
+          Delete
+        </button>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="grid grid-cols-2 gap-2 mb-2">
         <input
           type="date"
           value={dueDate || ''}
@@ -62,14 +81,33 @@ const TodoItem = ({ id, text, completed, category, dueDate, priority }: TodoItem
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
-        <button
-          onClick={() => dispatch(removeTodo(id))}
-          className="text-red-500 hover:text-red-700"
-        >
-          Delete
-        </button>
       </div>
-    </motion.li>
+      <div className="flex flex-wrap gap-1 mb-2">
+        {tags.map(tag => (
+          <span key={tag} className="bg-blue-200 dark:bg-blue-800 px-2 py-1 rounded-full text-xs flex items-center">
+            {tag}
+            <button
+              onClick={() => handleRemoveTag(tag)}
+              className="ml-1 text-red-500 hover:text-red-700"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+      </div>
+      <div className="flex items-center">
+        <select
+          onChange={handleTagChange}
+          className="px-2 py-1 border border-gray-300 rounded-md text-sm mr-2"
+        >
+          <option value="">Add a tag</option>
+          {allTags.filter(tag => !tags.includes(tag)).map(tag => (
+            <option key={tag} value={tag}>{tag}</option>
+          ))}
+        </select>
+        <span className="text-sm text-gray-500">{category}</span>
+      </div>
+    </motion.div>
   );
 };
 

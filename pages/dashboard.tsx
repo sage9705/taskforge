@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import TodoList from '../components/todos/TodoList';
@@ -8,9 +9,20 @@ import TodoSearch from '../components/todos/TodoSearch';
 import ClearCompletedButton from '../components/todos/ClearCompletedButton';
 import Statistics from '../components/dashboard/Statistics';
 import CategoryManagement from '../components/todos/CategoryManagement';
+import TagManagement from '../components/todos/TagManagement';
+import { checkDueReminders } from '../utils/reminderUtils';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
+  const todos = useSelector((state: RootState) => state.todos.items);
+  const reminderTime = useSelector((state: RootState) => state.settings.reminderTime);
+
+  useEffect(() => {
+    const dueReminders = checkDueReminders(todos, reminderTime);
+    if (dueReminders.length > 0) {
+      alert(`You have ${dueReminders.length} todo(s) due soon!`);
+    }
+  }, [todos, reminderTime]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -31,6 +43,7 @@ const Dashboard = () => {
         </div>
         <div>
           <CategoryManagement />
+          <TagManagement />
         </div>
       </div>
     </div>
