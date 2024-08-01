@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { register } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
+import { AppDispatch } from '../../store'; // Make sure to import AppDispatch
 
 const RegisterForm: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,8 +22,12 @@ const RegisterForm: React.FC = () => {
     }
 
     try {
-      await dispatch(register({ username, password }));
-      router.push('/dashboard');
+      const resultAction = await dispatch(register({ username, password }));
+      if (register.fulfilled.match(resultAction)) {
+        router.push('/dashboard');
+      } else if (register.rejected.match(resultAction)) {
+        setError(resultAction.payload as string || 'Registration failed. Please try again.');
+      }
     } catch (err) {
       setError('Registration failed. Please try again.');
     }
