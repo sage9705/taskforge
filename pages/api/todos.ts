@@ -11,6 +11,10 @@ function ensureDataDirectoryExists() {
   }
 }
 
+interface TodoData {
+  [userId: string]: string;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -27,19 +31,19 @@ export default async function handler(
       if (!fs.existsSync(TODOS_FILE)) {
         return res.status(200).json({ encryptedTodos: '' });
       }
-      const data = JSON.parse(fs.readFileSync(TODOS_FILE, 'utf8'));
+      const data: TodoData = JSON.parse(fs.readFileSync(TODOS_FILE, 'utf8'));
       res.status(200).json({ encryptedTodos: data[userId] || '' });
     } catch (error) {
       res.status(500).json({ error: 'Failed to read todos' });
     }
   } else if (req.method === 'POST') {
-    const { userId, encryptedTodos } = req.body;
+    const { userId, encryptedTodos } = req.body as { userId: string; encryptedTodos: string };
     if (!userId || !encryptedTodos) {
       return res.status(400).json({ error: 'Invalid data' });
     }
 
     try {
-      let data = {};
+      let data: TodoData = {};
       if (fs.existsSync(TODOS_FILE)) {
         data = JSON.parse(fs.readFileSync(TODOS_FILE, 'utf8'));
       }

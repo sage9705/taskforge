@@ -1,6 +1,5 @@
-import { getTodos, saveTodos } from './todoStorage';
 import { findUserByEmail, verifyUser, createUser } from './userStorage';
-import { User } from '../store/slices/authSlice';
+import { getTodos, saveTodos } from './todoStorage';
 
 export const api = {
   todos: {
