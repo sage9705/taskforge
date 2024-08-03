@@ -6,12 +6,15 @@ interface TaskOverviewProps {
 }
 
 const TaskOverview: React.FC<TaskOverviewProps> = ({ todos }) => {
-  const urgentTasks = todos.filter(todo => todo.priority === 'high').length;
-  const overdueTasks = todos.filter(todo => new Date(todo.dueDate) < new Date()).length;
-  const completedTasks = todos.filter(todo => todo.completed).length;
-  const totalTasks = todos.length;
-
-  return (
+    const urgentTasks = todos.filter(todo => todo.priority === 'high').length;
+    const overdueTasks = todos.filter(todo => {
+      if (!todo.dueDate) return false;
+      return new Date(todo.dueDate) < new Date();
+    }).length;
+    const completedTasks = todos.filter(todo => todo.completed).length;
+    const totalTasks = todos.length;
+  
+    return (
     <div className="bg-white shadow-md rounded-lg p-6">
       <h2 className="text-2xl font-semibold mb-4">Task Overview</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
