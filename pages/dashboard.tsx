@@ -9,6 +9,7 @@ import Calendar from '../components/dashboard/Calendar';
 import SearchBar from '../components/dashboard/SearchBar';
 import Analytics from '../components/dashboard/Analytics';
 import { motion } from 'framer-motion';
+import withAuth from '@/components/withAuth';
 
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -71,4 +72,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

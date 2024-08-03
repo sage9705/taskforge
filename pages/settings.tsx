@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { setReminderTime, setDefaultPriority, setShowCompletedTodos } from '../store/slices/settingsSlice';
+import withAuth from '@/components/withAuth';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -54,4 +55,4 @@ const Settings: React.FC = () => {
   );
 };
 
-export default Settings;
+export default withAuth(Settings);

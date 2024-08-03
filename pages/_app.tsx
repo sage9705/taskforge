@@ -28,6 +28,16 @@ function ThemeWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function TaskForge({ Component, pageProps }: AppProps) {
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+
+  useEffect(() => {
+    setIsAuthChecked(true);
+  }, []);
+
+  if (!isAuthChecked) {
+    return null; 
+  }
+
   return (
     <Provider store={store}>
       <ThemeWrapper>
