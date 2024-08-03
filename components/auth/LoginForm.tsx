@@ -2,31 +2,47 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
+import { verifyUser } from '../../utils/userStorage';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual authentication
-    dispatch(login(username));
-    router.push('/dashboard')
+    setError('');
+
+    try {
+      const user = await verifyUser(email, password);
+      if (user) {
+        dispatch(login({ email: user.email, username: user.username }));
+        router.push('/dashboard');
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {router.query.registered && (
+        <p className="text-green-500 mb-4">Registration successful. Please log in.</p>
+      )}
       <div className="mb-4">
-        <label htmlFor="username" className="block text-text font-bold mb-2">
-          Username
+        <label htmlFor="email" className="block text-text font-bold mb-2">
+          Email
         </label>
         <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
           required
         />
