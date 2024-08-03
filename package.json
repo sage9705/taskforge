@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
@@ -19,6 +20,7 @@
     "react-redux": "^9.1.2"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.6.0",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.14.14",
     "@types/react": "^18",
