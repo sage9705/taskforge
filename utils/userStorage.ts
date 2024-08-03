@@ -1,7 +1,9 @@
+import fs from 'fs';
+import path from 'path';
 import CryptoJS from 'crypto-js';
 
-const USERS_KEY = 'taskforge_users';
-const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'your-fallback-encryption-key';
+const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
+const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || '';
 
 interface User {
   id: string;
@@ -19,16 +21,27 @@ function decrypt(ciphertext: string): string {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
+function ensureDataDirectoryExists() {
+  const dataDir = path.join(process.cwd(), 'data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+  }
+}
+
 export async function getUsers(): Promise<User[]> {
-  const encryptedData = localStorage.getItem(USERS_KEY);
-  if (!encryptedData) return [];
+  ensureDataDirectoryExists();
+  if (!fs.existsSync(USERS_FILE)) {
+    return [];
+  }
+  const encryptedData = fs.readFileSync(USERS_FILE, 'utf8');
   const decryptedData = decrypt(encryptedData);
   return JSON.parse(decryptedData);
 }
 
 export async function saveUsers(users: User[]): Promise<void> {
+  ensureDataDirectoryExists();
   const encryptedData = encrypt(JSON.stringify(users));
-  localStorage.setItem(USERS_KEY, encryptedData);
+  fs.writeFileSync(USERS_FILE, encryptedData);
 }
 
 export async function findUserByEmail(email: string): Promise<User | undefined> {
