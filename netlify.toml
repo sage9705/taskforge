@@ -1,5 +1,5 @@
 [build]
-  command = "npm ci && npm run build"
+  command = "npm install --save-dev typescript @types/node && npm ci && npm run build"
   publish = ".next"
 
 [[plugins]]
