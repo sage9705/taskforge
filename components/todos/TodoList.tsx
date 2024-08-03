@@ -37,7 +37,10 @@ const TodoList: React.FC = () => {
     result.sort((a, b) => {
       switch (sortBy) {
         case 'dueDate':
-          return (a.dueDate || '').localeCompare(b.dueDate || '');
+          if (!a.dueDate && !b.dueDate) return 0;
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return a.dueDate.localeCompare(b.dueDate);
         case 'category':
           return a.category.localeCompare(b.category);
         case 'status':
