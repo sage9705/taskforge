@@ -5,6 +5,20 @@ import CryptoJS from 'crypto-js';
 
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || '';
+const USE_FILE_STORAGE = process.env.NODE_ENV !== 'production';
+
+let inMemoryUsers: any[] = [];
+
+async function getUsers() {
+  if (USE_FILE_STORAGE) {
+    if (!fs.existsSync(USERS_FILE)) {
+      return [];
+    }
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+  } else {
+    return inMemoryUsers;
+  }
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -18,11 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    if (!fs.existsSync(USERS_FILE)) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    const users = await getUsers();
     const user = users.find((u: any) => u.email === email);
 
     if (!user) {
