@@ -6,6 +6,7 @@ const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'your-fallback-
 interface User {
   id: string;
   email: string;
+  username: string;
   passwordHash: string;
 }
 
@@ -35,11 +36,16 @@ export async function findUserByEmail(email: string): Promise<User | undefined> 
   return users.find(user => user.email === email);
 }
 
-export async function createUser(email: string, password: string): Promise<User> {
+export async function findUserByUsername(username: string): Promise<User | undefined> {
+  const users = await getUsers();
+  return users.find(user => user.username === username);
+}
+
+export async function createUser(email: string, username: string, password: string): Promise<User> {
   const users = await getUsers();
   const id = CryptoJS.lib.WordArray.random(16).toString();
   const passwordHash = CryptoJS.SHA256(password).toString();
-  const newUser: User = { id, email, passwordHash };
+  const newUser: User = { id, email, username, passwordHash };
   users.push(newUser);
   await saveUsers(users);
   return newUser;
