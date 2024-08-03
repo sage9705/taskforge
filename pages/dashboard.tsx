@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
+import { RootState, AppDispatch } from '../store';
 import { setSearchTerm, loadTodos, saveTodosToStorage } from '../store/slices/todosSlice';
 import TodoList from '../components/todos/TodoList';
 import AddTodoForm from '../components/todos/AddTodoForm';
@@ -11,7 +11,7 @@ import Analytics from '../components/dashboard/Analytics';
 import { motion } from 'framer-motion';
 
 const Dashboard: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
   const todos = useSelector((state: RootState) => state.todos.items);
 
@@ -30,7 +30,6 @@ const Dashboard: React.FC = () => {
   const handleSearch = (term: string) => {
     dispatch(setSearchTerm(term));
   };
-
 
   return (
     <div className="container mx-auto px-4 py-8">
