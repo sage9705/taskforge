@@ -5,17 +5,41 @@ import CryptoJS from 'crypto-js';
 
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || '';
+const USE_FILE_STORAGE = process.env.NODE_ENV !== 'production';
+
+let inMemoryUsers: any[] = [];
 
 function ensureDataDirectoryExists() {
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir);
+  if (USE_FILE_STORAGE) {
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir);
+    }
   }
 }
 
 function decrypt(ciphertext: string): string {
   const bytes = CryptoJS.AES.decrypt(ciphertext, ENCRYPTION_KEY);
   return bytes.toString(CryptoJS.enc.Utf8);
+}
+
+async function getUsers() {
+  if (USE_FILE_STORAGE) {
+    if (!fs.existsSync(USERS_FILE)) {
+      return [];
+    }
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+  } else {
+    return inMemoryUsers;
+  }
+}
+
+async function saveUsers(users: any[]) {
+  if (USE_FILE_STORAGE) {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users));
+  } else {
+    inMemoryUsers = users;
+  }
 }
 
 export default async function handler(
@@ -28,10 +52,7 @@ export default async function handler(
     const { email, username } = req.query;
     
     try {
-      if (!fs.existsSync(USERS_FILE)) {
-        return res.status(200).json({ user: null });
-      }
-      const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+      const users = await getUsers();
       let user = null;
       if (email && typeof email === 'string') {
         user = users.find((u: any) => u.email === email);
@@ -43,20 +64,15 @@ export default async function handler(
       console.error('Error reading users:', error);
       res.status(500).json({ error: 'Failed to read users' });
     }
-} else if (req.method === 'POST') {
+  } else if (req.method === 'POST') {
     const { encryptedUser } = req.body;
     if (!encryptedUser) {
       return res.status(400).json({ error: 'Invalid data' });
     }
 
     try {
-      let users = [];
-      if (fs.existsSync(USERS_FILE)) {
-        users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-      }
-      
+      const users = await getUsers();
       const decryptedUser = JSON.parse(decrypt(encryptedUser));
-
       
       // Check if user already exists
       const existingUser = users.find((u: any) => u.email === decryptedUser.email || u.username === decryptedUser.username);
@@ -65,7 +81,7 @@ export default async function handler(
       }
       
       users.push(decryptedUser);
-      fs.writeFileSync(USERS_FILE, JSON.stringify(users));
+      await saveUsers(users);
       res.status(200).json({ message: 'User created successfully' });
     } catch (error) {
       console.error('Error creating user:', error);
