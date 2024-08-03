@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { ReactNode, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { logout } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import Benefits from '../Benefits';
 import Features from '../Features';
 import ScrollToTop from '../ScrollToTop';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAppDispatch } from '../../store/hooks';
 
 type LayoutProps = {
     children: ReactNode;
@@ -19,7 +20,7 @@ type LayoutProps = {
 
 const Layout = ({ children, title = 'TaskForge' }: LayoutProps) => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrollY, setScrollY] = useState(0);
