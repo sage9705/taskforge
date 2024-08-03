@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
+import { useRouter } from 'next/router';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement actual authentication
     dispatch(login(username));
+    router.push('/dashboard')
   };
 
   return (
