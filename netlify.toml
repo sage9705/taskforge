@@ -6,4 +6,5 @@
   package = "@netlify/plugin-nextjs"
 
 [build.environment]
-  NPM_FLAGS = "--legacy-peer-deps"
+  NEXT_USE_NETLIFY_EDGE = "true"
+  NODE_VERSION = "18"
