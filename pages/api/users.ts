@@ -4,7 +4,7 @@ import path from 'path';
 import CryptoJS from 'crypto-js';
 
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
-const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'fallback-key';
+const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || '';
 
 function ensureDataDirectoryExists() {
   const dataDir = path.join(process.cwd(), 'data');
