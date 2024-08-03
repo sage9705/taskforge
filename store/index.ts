@@ -1,4 +1,4 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, ThunkAction, Action } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import authReducer from './slices/authSlice';
 import todosReducer from './slices/todosSlice';
@@ -30,3 +30,10 @@ store.subscribe(() => {
 
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
+
+export type AppThunk<ReturnType = void> = ThunkAction
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
