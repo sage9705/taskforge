@@ -3,12 +3,14 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
 import { verifyUser } from '../../utils/userStorage';
+import { api } from '../../utils/api';
+import { AppDispatch } from '../../store';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,14 +18,15 @@ const LoginForm = () => {
     setError('');
 
     try {
-      const user = await verifyUser(email, password);
+      const user = await api.users.verify(email, password);
       if (user) {
-        dispatch(login({ email: user.email, username: user.username }));
+        await dispatch(login(email, password));
         router.push('/dashboard');
       } else {
         setError('Invalid email or password');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Login failed. Please try again.');
     }
   };

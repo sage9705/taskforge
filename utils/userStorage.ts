@@ -1,8 +1,8 @@
 import CryptoJS from 'crypto-js';
 
-const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'fallback-key';
+const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || '';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   username: string;
@@ -49,7 +49,8 @@ export async function createUser(email: string, username: string, password: stri
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create user');
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to create user');
   }
 
   return newUser;

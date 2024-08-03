@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { createUser, findUserByEmail, findUserByUsername } from '../../utils/userStorage';
+import { api } from '../../utils/api';
 
 const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -20,24 +21,26 @@ const RegisterForm: React.FC = () => {
     }
 
     try {
-      const existingEmail = await findUserByEmail(email);
+      const existingEmail = await api.users.findByEmail(email);
       if (existingEmail) {
         setError('Email already in use');
         return;
       }
 
-      const existingUsername = await findUserByUsername(username);
+      const existingUsername = await api.users.findByEmail(username);
       if (existingUsername) {
         setError('Username already taken');
         return;
       }
 
-      await createUser(email, username, password);
+      await api.users.create(email, username, password);
       router.push('/login?registered=true');
     } catch (err) {
+      console.error('Registration error:', err);
       setError('Registration failed. Please try again.');
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
