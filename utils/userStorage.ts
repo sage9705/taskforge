@@ -5,7 +5,7 @@ const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || 'your-fallback-
 
 interface User {
   id: string;
-  username: string;
+  email: string;
   passwordHash: string;
 }
 
@@ -30,23 +30,23 @@ export async function saveUsers(users: User[]): Promise<void> {
   localStorage.setItem(USERS_KEY, encryptedData);
 }
 
-export async function findUserByUsername(username: string): Promise<User | undefined> {
+export async function findUserByEmail(email: string): Promise<User | undefined> {
   const users = await getUsers();
-  return users.find(user => user.username === username);
+  return users.find(user => user.email === email);
 }
 
-export async function createUser(username: string, password: string): Promise<User> {
+export async function createUser(email: string, password: string): Promise<User> {
   const users = await getUsers();
   const id = CryptoJS.lib.WordArray.random(16).toString();
   const passwordHash = CryptoJS.SHA256(password).toString();
-  const newUser: User = { id, username, passwordHash };
+  const newUser: User = { id, email, passwordHash };
   users.push(newUser);
   await saveUsers(users);
   return newUser;
 }
 
-export async function verifyUser(username: string, password: string): Promise<User | null> {
-  const user = await findUserByUsername(username);
+export async function verifyUser(email: string, password: string): Promise<User | null> {
+  const user = await findUserByEmail(email);
   if (!user) return null;
   const passwordHash = CryptoJS.SHA256(password).toString();
   return user.passwordHash === passwordHash ? user : null;

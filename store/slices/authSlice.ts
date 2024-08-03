@@ -18,6 +18,10 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload;
     },
+    register(state, action: PayloadAction<string>) {
+      state.isAuthenticated = true;
+      state.user = action.payload;
+    },
     logout(state) {
       state.isAuthenticated = false;
       state.user = null;
@@ -25,5 +29,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, register, logout } = authSlice.actions;
 export default authSlice.reducer;
