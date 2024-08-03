@@ -208,10 +208,10 @@ export const loadTodos = (userId: string): AppThunk => async (dispatch) => {
   }
 };
 
-export const saveTodosToStorage = (userId: string): AppThunk => async (_, getState) => {
+export const saveTodosToStorage = (userId: string): AppThunk => async (dispatch, getState) => {
   try {
-    const { todos } = getState();
-    await saveTodos(userId, todos.items);
+    const state = getState();
+    await saveTodos(userId, state.todos.items);
   } catch (error) {
     console.error("Failed to save todos:", error);
   }

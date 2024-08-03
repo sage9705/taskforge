@@ -31,9 +31,4 @@ store.subscribe(() => {
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 
-export type AppThunk<ReturnType = void> = ThunkAction
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;
