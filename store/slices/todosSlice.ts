@@ -3,10 +3,11 @@ import { getTodos, saveTodos } from "../../utils/todoStorage";
 import { AppThunk } from "../index";
 
 export interface Subtask {
-    id: string;
-    text: string;
-    completed: boolean;
-  }
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export interface Todo {
   id: string;
   text: string;
@@ -152,30 +153,30 @@ const todosSlice = createSlice({
       }
     },
     addSubtask: (state, action: PayloadAction<{ todoId: string; subtaskText: string }>) => {
-        const todo = state.items.find(item => item.id === action.payload.todoId);
-        if (todo) {
-          todo.subtasks.push({
-            id: Date.now().toString(),
-            text: action.payload.subtaskText,
-            completed: false,
-          });
+      const todo = state.items.find(item => item.id === action.payload.todoId);
+      if (todo) {
+        todo.subtasks.push({
+          id: Date.now().toString(),
+          text: action.payload.subtaskText,
+          completed: false,
+        });
+      }
+    },
+    toggleSubtask: (state, action: PayloadAction<{ todoId: string; subtaskId: string }>) => {
+      const todo = state.items.find(item => item.id === action.payload.todoId);
+      if (todo) {
+        const subtask = todo.subtasks.find(st => st.id === action.payload.subtaskId);
+        if (subtask) {
+          subtask.completed = !subtask.completed;
         }
-      },
-      toggleSubtask: (state, action: PayloadAction<{ todoId: string; subtaskId: string }>) => {
-        const todo = state.items.find(item => item.id === action.payload.todoId);
-        if (todo) {
-          const subtask = todo.subtasks.find(st => st.id === action.payload.subtaskId);
-          if (subtask) {
-            subtask.completed = !subtask.completed;
-          }
-        }
-      },
-      removeSubtask: (state, action: PayloadAction<{ todoId: string; subtaskId: string }>) => {
-        const todo = state.items.find(item => item.id === action.payload.todoId);
-        if (todo) {
-          todo.subtasks = todo.subtasks.filter(st => st.id !== action.payload.subtaskId);
-        }
-      },
+      }
+    },
+    removeSubtask: (state, action: PayloadAction<{ todoId: string; subtaskId: string }>) => {
+      const todo = state.items.find(item => item.id === action.payload.todoId);
+      if (todo) {
+        todo.subtasks = todo.subtasks.filter(st => st.id !== action.payload.subtaskId);
+      }
+    },
   },
 });
 
@@ -195,6 +196,7 @@ export const {
   addSubtask,
   toggleSubtask,
   removeSubtask,
+  setTodos,
 } = todosSlice.actions;
 
 export const loadTodos = (userId: string): AppThunk => async (dispatch) => {
