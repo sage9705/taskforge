@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { register } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
 import { createUser, findUserByEmail, findUserByUsername } from '../../utils/userStorage';
 

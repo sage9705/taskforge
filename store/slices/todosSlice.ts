@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getTodos, saveTodos } from "../../utils/todoStorage";
+import { AppThunk } from "../index";
 
 export interface Subtask {
     id: string;
@@ -42,6 +44,9 @@ const todosSlice = createSlice({
       if (!state.tags.includes(action.payload)) {
         state.tags.push(action.payload);
       }
+    },
+    setTodos: (state, action: PayloadAction<Todo[]>) => {
+      state.items = action.payload;
     },
     removeTag: (state, action: PayloadAction<string>) => {
       state.tags = state.tags.filter((tag) => tag !== action.payload);
@@ -191,5 +196,23 @@ export const {
   toggleSubtask,
   removeSubtask,
 } = todosSlice.actions;
+
+export const loadTodos = (userId: string): AppThunk => async (dispatch) => {
+  try {
+    const todos = await getTodos(userId);
+    dispatch(setTodos(todos));
+  } catch (error) {
+    console.error("Failed to load todos:", error);
+  }
+};
+
+export const saveTodosToStorage = (userId: string): AppThunk => async (_, getState) => {
+  try {
+    const { todos } = getState();
+    await saveTodos(userId, todos.items);
+  } catch (error) {
+    console.error("Failed to save todos:", error);
+  }
+};
 
 export default todosSlice.reducer;
