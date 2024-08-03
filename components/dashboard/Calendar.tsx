@@ -24,7 +24,11 @@ const Calendar: React.FC<CalendarProps> = ({ todos }) => {
         ))}
         {days.map(day => {
           const date = new Date(today.getFullYear(), today.getMonth(), day);
-          const hasTasks = todos.some(todo => new Date(todo.dueDate).toDateString() === date.toDateString());
+          const hasTasks = todos.some(todo => {
+            if (!todo.dueDate) return false;
+            const todoDate = new Date(todo.dueDate);
+            return todoDate.toDateString() === date.toDateString();
+          });
           return (
             <div 
               key={day} 
