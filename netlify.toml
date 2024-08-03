@@ -1,5 +1,5 @@
 [build]
-  command = "npm install --save-dev typescript @types/node && npm ci && npm run build"
+  command = "npm ci && npm run build"
   publish = ".next"
 
 [[plugins]]
@@ -8,3 +8,4 @@
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
