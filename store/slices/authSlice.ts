@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppThunk } from '../../store';
+import { AppThunk } from '../../store'; 
 import { api } from '../../utils/api';
 
 export interface User {
@@ -43,7 +43,7 @@ export const login = (email: string, password: string): AppThunk => async (dispa
     } else {
       throw new Error('Invalid credentials');
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Login failed:', error);
     throw error;
   }

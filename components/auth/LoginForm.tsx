@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
 import { useRouter } from 'next/router';
-import { verifyUser } from '../../utils/userStorage';
-import { api } from '../../utils/api';
 import { AppDispatch } from '../../store';
 
 const LoginForm = () => {
@@ -18,18 +16,14 @@ const LoginForm = () => {
     setError('');
 
     try {
-      const user = await api.users.verify(email, password);
-      if (user) {
-        await dispatch(login(email, password));
-        router.push('/dashboard');
-      } else {
-        setError('Invalid email or password');
-      }
-    } catch (err) {
+      await dispatch(login(email, password));
+      router.push('/dashboard');
+    } catch (err: any) {
       console.error('Login error:', err);
-      setError('Login failed. Please try again.');
+      setError(err.message || 'Login failed. Please try again.');
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto">

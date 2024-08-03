@@ -57,8 +57,24 @@ export async function createUser(email: string, username: string, password: stri
 }
 
 export async function verifyUser(email: string, password: string): Promise<User | null> {
-  const user = await findUserByEmail(email);
-  if (!user) return null;
-  const passwordHash = CryptoJS.SHA256(password).toString();
-  return user.passwordHash === passwordHash ? user : null;
+  try {
+    const response = await fetch('/api/users/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Verification failed');
+    }
+
+    const data = await response.json();
+    return data.user;
+  } catch (error) {
+    console.error('Error verifying user:', error);
+    return null;
+  }
 }
